@@ -14,4 +14,16 @@ class Channel extends Model
 
     // Eloquentを通して更新や登録が可能なフィールド（ホワイトリストを定義）
     protected $fillable = ['uuid', 'name'];
+
+    // １対多
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    // 多対多
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

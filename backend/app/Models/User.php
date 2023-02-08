@@ -42,4 +42,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // 多対多
+    public function channels()
+    {
+        return $this->belongsToMany(Channel::class);
+    }
+
+    // １対多
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 }

@@ -16,4 +16,22 @@ class Message extends Model
     ];
 
     protected $dateFormat = 'Y-m-d H:i:s.v';
+
+    // 多対１
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // 多対多
+    public function attachments()
+    {
+        return $this->belongsToMany(Attachment::class);
+    }
+
+    // 多対１
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class);
+    }
 }

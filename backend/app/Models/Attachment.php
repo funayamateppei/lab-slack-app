@@ -13,4 +13,10 @@ class Attachment extends Model
         'path',
         'original_filename'
     ];
+
+    // 多対多
+    public function messages()
+    {
+        return $this->belongsToMany(Message::class);
+    }
 }
