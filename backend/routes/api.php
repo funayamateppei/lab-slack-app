@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\MyResourceController;
+use App\Http\Controllers\Api\ChannelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,45 +20,57 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/channels', function (Request $request) {
-    return response()->json([
-        'id' => 1,
-        'uuid' => \Str::uuid(),
-        'name' => 'テストチャンネルの名前',
-        'joined' => true,
-    ]);
-});
+// Route::post('/channels', function (Request $request) {
+//     return response()->json([
+//         'id' => 1,
+//         'uuid' => \Str::uuid(),
+//         'name' => 'テストチャンネルの名前',
+//         'joined' => true,
+//     ]);
+// });
+Route::prefix('/channels')
+    ->name('channels.')
+    ->group(function () {
+        Route::post('', [ChannelController::class, 'store'])->name('store');
+    });
+    
 
-Route::get('/me', function () {
-    return response()->json([
-        "id" => 1,
-        "nickname" => "ニックネーム",
-        "email" => "user@example.com",
-        "icon_url" => "http://localhost/users/image/1",
-    ]);
-});
+Route::middleware(['auth:sanctum'])
+    ->name('api.')
+    ->group(function () {
 
-Route::post('/my/icons', function () {
-    return 'http://localhost/users/image/1';
-});
+        // Route::get('/me', function () {
+        //     return response()->json([
+        //         "id" => 1,
+        //         "nickname" => "ニックネーム",
+        //         "email" => "user@example.com",
+        //         "icon_url" => "http://localhost/users/image/1",
+        //     ]);
+        // });
+        Route::get('/me', [MyResourceController::class, 'me'])->name('me');
 
-Route::get('/my/channels', function () {
-    return response()->json([
-        [
-            'id' => 1,
-            'uuid' => \Str::uuid(),
-            'name' => 'テストチャンネルの名前1',
-            'joined' => true,
-        ],
-        [
-            'id' => 2,
-            'uuid' => \Str::uuid(),
-            'name' => 'テストチャンネルの名前2',
-            'joined' => false,
-        ],
-    ]);
-});
+        Route::post('/my/icons', function () {
+            return 'http://localhost/users/image/1';
+        });
 
-Route::delete('/channels/{uuid}/messages/{id}', function ($uuid, $id) {
-    return response()->noContent();
-});
+        Route::get('/my/channels', function () {
+            return response()->json([
+                [
+                    'id' => 1,
+                    'uuid' => \Str::uuid(),
+                    'name' => 'テストチャンネルの名前1',
+                    'joined' => true,
+                ],
+                [
+                    'id' => 2,
+                    'uuid' => \Str::uuid(),
+                    'name' => 'テストチャンネルの名前2',
+                    'joined' => false,
+                ],
+            ]);
+        });
+
+        Route::delete('/channels/{uuid}/messages/{id}', function ($uuid, $id) {
+            return response()->noContent();
+        });
+    });
