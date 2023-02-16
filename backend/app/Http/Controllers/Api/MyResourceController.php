@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -24,12 +25,13 @@ class MyResourceController extends Controller
     
     public function channels(Request $request)
     {
-        $channels = Channel::with('user')
+        $channels = Channel::with('users')
             ->whereHas('users', function (Builder $query) {
                 $query->where('user_id', Auth::id());
             })
             ->orderBy('created_at', 'asc')
             ->get();
+
         return response()->json($channels);
     }
 
@@ -50,7 +52,7 @@ class MyResourceController extends Controller
                 }
         });
         return response()->json(
-            route('web.user.image', ['userId' => Auth::id()])
+            route('web.users.image', ['userId' => Auth::id()])
         );
     }
 }
