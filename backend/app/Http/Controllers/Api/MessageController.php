@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Api\MessageStoreRequest;
+use App\Http\Requests\Api\MessagePollingRequest;
 
 class MessageController extends Controller
 {
@@ -28,7 +29,7 @@ class MessageController extends Controller
         return response()->json($messages);
     }
 
-    public function polling(Request $request, string $uuid)
+    public function polling(MessagePollingRequest $request, string $uuid)
     {
         $dateTimeString = Carbon::createFromTimestampMs(
             $request->validated('ts')
