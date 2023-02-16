@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\Api\MessageStoreRequest;
 
 class MessageController extends Controller
 {
@@ -44,7 +45,7 @@ class MessageController extends Controller
         return response()->json($messages);
     }
 
-    public function store(Request $request, string $uuid)
+    public function store(MessageStoreRequest $request, string $uuid)
     {
         $message = DB::transaction(function () use ($request, $uuid) {
             $message = Message::create([
