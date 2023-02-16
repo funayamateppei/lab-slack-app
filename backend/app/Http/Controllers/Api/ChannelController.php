@@ -8,6 +8,7 @@ use App\Models\Channel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Http\Requests\Api\ChannelStoreRequest;
 
 
 class ChannelController extends Controller
@@ -22,22 +23,16 @@ class ChannelController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(ChannelStoreRequest $request)
     {
-        // こんな風にリクエストパラメータを受け取ります。
-        $name = $request->name; // $request->input('name') でもOK
-
-        // Eloquentを使ってDBに保存します
-        $storedChannel = Channel::create([
-            'name' => $name,
-            'uuid' => \Str::uuid(),
+        $channel = Channel::create([
+            'uuid' => Str::uuid(),
+            'name' => $request->validated('name'),
         ]);
 
-        // チャンネルを作った人はそのままチャンネルに参加している状態を作りたい
-        // つまり、channel_userテーブルの中間テーブルに紐付けデータを作成
-        $storedChannel->users()->sync([Auth::id()]);
+        $channel->users()->sync([Auth::id()]);
 
-        return response()->json($storedChannel);
+        return response()->json($channel);
     }
 
 
