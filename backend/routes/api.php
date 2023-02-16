@@ -38,19 +38,9 @@ Route::prefix('/channels')
 Route::middleware(['auth:sanctum'])
     ->name('api.')
     ->group(function () {
-
-        // Route::get('/me', function () {
-        //     return response()->json([
-        //         "id" => 1,
-        //         "nickname" => "ニックネーム",
-        //         "email" => "user@example.com",
-        //         "icon_url" => "http://localhost/users/image/1",
-        //     ]);
-        // });
         Route::get('/me', [MyResourceController::class, 'me'])->name('me');
-
-        Route::post('/my/icons', function () {
-            return 'http://localhost/users/image/1';
+        Route::get('/my/channels', [MyResourceController::class, 'channels'])->name('channels');
+        Route::post('/my/icons', [MyResourceController::class, 'updateIcons'])->name('updateIcons');
         });
 
         Route::get('/my/channels', function () {
@@ -73,4 +63,3 @@ Route::middleware(['auth:sanctum'])
         Route::delete('/channels/{uuid}/messages/{id}', function ($uuid, $id) {
             return response()->noContent();
         });
-    });
