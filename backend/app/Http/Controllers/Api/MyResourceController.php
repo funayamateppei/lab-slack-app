@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\Api\MyIconStoreRequest;
+
 
 class MyResourceController extends Controller
 {
@@ -35,7 +37,7 @@ class MyResourceController extends Controller
         return response()->json($channels);
     }
 
-    public function updateIcons(Request $request)
+    public function updateIcons(MyIconStoreRequest $request)
     {
         DB::transaction(function () use ($request) {
             $savePath = $request->image->store('users/images');
