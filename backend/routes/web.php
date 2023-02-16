@@ -12,9 +12,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
-    return ['Laravel' => app()->version()];
+    return abort(403);
 });
 
-require __DIR__.'/auth.php';
+Route::get('/users/image/{userId}', [UserController::class, 'showIcon'])
+    ->name('web.users.image');
+Route::get('/attachments/{attachmentId}', [AttachmentController::class, 'download'])
+    ->name('web.attachments');
+
+require __DIR__ . '/auth.php';
