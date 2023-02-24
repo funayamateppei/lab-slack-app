@@ -14,6 +14,10 @@ use App\Http\Resources\ChannelResource;
 
 class ChannelController extends Controller
 {
+    public function __construct(protected Channel $channel)
+    {
+    }
+
     public function index(Request $request)
     {
         $channels = Channel::with('users')
@@ -26,14 +30,18 @@ class ChannelController extends Controller
 
     public function store(ChannelStoreRequest $request)
     {
-        $channel = Channel::create([
-            'uuid' => Str::uuid(),
-            'name' => $request->validated('name'),
-        ]);
+        $channel = \DB::transaction(function () use ($request) {
+            // $channel = Channel::create([
+            //     'uuid' => Str::uuid(),
+            //     'name' => $request->validated('name'),
+            // ]);
+            $channel = $this->channel->store($request->validated('name'));
 
-        $channel->users()->sync([Auth::id()]);
-
-        return new ChannelResource($channel);    
+            // $channel->users()->sync([Auth::id()]);
+            $this->channel->addFirstMember($channel, Auth::id());
+            return $channel;
+        });
+        return new ChannelResource($channel);
     }
 
 
