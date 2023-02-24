@@ -15,6 +15,7 @@ use App\Http\Requests\Api\MessageStoreRequest;
 use App\Http\Requests\Api\MessagePollingRequest;
 use App\Http\Requests\Api\MessageIndexRequest;
 use App\Http\Requests\Api\MessageDestroyRequest;
+use App\Http\Resources\MessageResource;
 
 class MessageController extends Controller
 {
@@ -28,7 +29,7 @@ class MessageController extends Controller
             ->orderBy('id', 'desc')
             ->cursorPaginate(20);
 
-        return response()->json($messages);
+        return MessageResource::collection($messages);
     }
 
     public function polling(MessagePollingRequest $request, string $uuid)
@@ -45,7 +46,7 @@ class MessageController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
-        return response()->json($messages);
+        return MessageResource::collection($messages);    
     }
 
     public function store(MessageStoreRequest $request, string $uuid)
@@ -66,7 +67,7 @@ class MessageController extends Controller
             return $message;
         });
 
-        return response()->json($message);
+        return new MessageResource($message);
     }
 
     public function destroy(MessageDestroyRequest $request, string $uuid, string $id)

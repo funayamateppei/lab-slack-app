@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\Api\ChannelStoreRequest;
+use App\Http\Resources\ChannelResource;
 
 
 class ChannelController extends Controller
@@ -19,7 +20,7 @@ class ChannelController extends Controller
             ->orderBy('created_at', 'asc')
             ->paginate(20);
 
-        return response()->json($channels);
+        return ChannelResource::collection($channels);    
     }
 
 
@@ -32,7 +33,7 @@ class ChannelController extends Controller
 
         $channel->users()->sync([Auth::id()]);
 
-        return response()->json($channel);
+        return new ChannelResource($channel);    
     }
 
 
