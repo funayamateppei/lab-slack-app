@@ -3,9 +3,9 @@
 namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Channel;
+use App\Models\Message;
 
-class MessagePollingRequest extends FormRequest
+class MessageDestroyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,8 +14,8 @@ class MessagePollingRequest extends FormRequest
      */
     public function authorize()
     {
-        $channel = Channel::where('uuid', $this->route('uuid'))->first();
-        return $this->user()->can('show', $channel);    
+        $message = Message::find($this->route('id'));
+        return $this->user()->can('delete', $message);    
     }
 
     /**
@@ -26,7 +26,7 @@ class MessagePollingRequest extends FormRequest
     public function rules()
     {
         return [
-            'ts' => 'required|integer',
+            //
         ];
     }
 }

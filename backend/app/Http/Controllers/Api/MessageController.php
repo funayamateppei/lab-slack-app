@@ -13,10 +13,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Api\MessageStoreRequest;
 use App\Http\Requests\Api\MessagePollingRequest;
+use App\Http\Requests\Api\MessageIndexRequest;
+use App\Http\Requests\Api\MessageDestroyRequest;
 
 class MessageController extends Controller
 {
-    public function index(Request $request, string $uuid)
+    public function index(MessageIndexRequest $request, string $uuid)
     {
         /** @var \Illuminate\Pagination\CursorPaginator $messages */
         $messages = Message::with(['user', 'attachments'])
@@ -67,7 +69,7 @@ class MessageController extends Controller
         return response()->json($message);
     }
 
-    public function destroy(Request $request, string $uuid, string $id)
+    public function destroy(MessageDestroyRequest $request, string $uuid, string $id)
     {
         DB::transaction(function () use ($id) {
             $message = Message::with('attachments')->find($id);
